@@ -1,17 +1,17 @@
-.PHONY: build run push
+# Variables
+PYTHON = python3
+UVICORN = uvicorn
+APP = app.main:app  # Replace with your app's entry point (e.g., filename:FastAPI_instance)
 
-build:
-	python3 -m venv .venv
-	. .venv/bin/activate && pip install -r requirements.txt
-	docker build -t sentiment-analysis-api .
+# Targets
+.PHONY: setup run clean
 
-run:
-	if [ ! -d ".venv" ]; then \
-		python3 -m venv .venv; \
-		. .venv/bin/activate && pip install -r requirements.txt; \
-	fi; \
-	. .venv/bin/activate && uvicorn app.main:app --host 0.0.0.0 --port 8000
+setup:  ## Create a virtual environment and install dependencies
+    $(PYTHON) -m venv .venv
+    . .venv/bin/activate && pip install -U pip && pip install -r requirements.txt
 
-push:
-	docker tag sentiment-analysis-api <aws_account_id>.dkr.ecr.<region>.amazonaws.com/sentiment-analysis-api
-	docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/sentiment-analysis-api
+run:  ## Activate the virtual environment and run Uvicorn
+    . .venv/bin/activate && $(UVICORN) $(APP) --reload
+
+clean:  ## Remove the virtual environment
+    rm -rf .venv
