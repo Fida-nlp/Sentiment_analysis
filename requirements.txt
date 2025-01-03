@@ -3,3 +3,5 @@ uvicorn
 transformers
 joblib
 boto3
+tensorflow
+torch

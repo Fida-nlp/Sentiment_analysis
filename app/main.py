@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from model import load_model, predict_sentiment
+from .model import load_model, predict_sentiment
 
 app = FastAPI()
 model = load_model()
